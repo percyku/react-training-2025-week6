@@ -7,9 +7,9 @@ const { VITE_APP_API_BASE } = import.meta.env;
 
 const Login = () => {
   const navigate = useNavigate();
-  const [alertMsg, setAlerMsg] = useState("");
+  const [alertMsg, setAlertMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const [authData, setAuthData] = useState(null);
   const {
     register,
     handleSubmit,
@@ -32,9 +32,11 @@ const Login = () => {
           axios.defaults.headers.common.Authorization = token;
           setIsLoading(true);
           const res = await axios.post(`${VITE_APP_API_BASE}/api/user/check`);
-          if (res === "") {
-          } else {
+
+          if (res.data.success === true) {
             navigate("/dashboard");
+          } else {
+            setAlertMsg(`登入失敗，請再試一次`);
           }
         }
       } catch (error) {
@@ -45,7 +47,7 @@ const Login = () => {
         setIsLoading(false);
       }
     })();
-  }, []);
+  }, [authData, navigate]);
 
   const handleLoginSubmit = async (formData) => {
     try {
@@ -55,13 +57,12 @@ const Login = () => {
         formData,
       );
       const { token, expired } = res.data;
+      setAuthData({ token, expired });
       document.cookie = `react-week2-token=${token};expires=${new Date(
         expired,
       )};`;
-      axios.defaults.headers.common.Authorization = `${token}`;
-      navigate("/dashboard");
     } catch (error) {
-      setAlerMsg(`登入失敗 ${error}`);
+      setAlertMsg(`登入失敗 ${error}`);
     } finally {
       setIsLoading(false);
     }

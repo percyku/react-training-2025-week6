@@ -30,7 +30,6 @@ function Checkout() {
     try {
       const url = `${VITE_APP_API_BASE}/api/${VITE_APP_API_PATH}/products?page=${page}`;
       const res = await axios.get(url);
-      console.log(res.data);
       setProducts(res.data.products);
       setPagination(res.data.pagination);
     } catch (error) {

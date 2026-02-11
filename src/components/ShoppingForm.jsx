@@ -17,12 +17,12 @@ const ShoppingForm = ({
     reset,
   } = useForm({
     mode: "onChange",
-    // defaultValues: {
-    //   name: "percy",
-    //   email: "test123@gmail.com",
-    //   tel: "123456789",
-    //   address: "123",
-    // },
+    defaultValues: {
+      name: "percy",
+      email: "test123@gmail.com",
+      tel: "123456789",
+      address: "123",
+    },
   });
 
   const onSubmit = async (data) => {
@@ -36,6 +36,7 @@ const ShoppingForm = ({
       await axios.post(url, { data: { user: data, message: data.message } });
       reset();
       getCart();
+      toast.success("訂單提交成功！");
     } catch (error) {
       toast.error(error);
     } finally {
